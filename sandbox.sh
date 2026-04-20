@@ -20,6 +20,7 @@ BWRAP_CMD+=" --ro-bind /lib64 /lib64"
 BWRAP_CMD+=" --ro-bind /bin /bin"
 BWRAP_CMD+=" --ro-bind /sbin /sbin"
 BWRAP_CMD+=" --ro-bind /etc /etc"
+BWRAP_CMD+=" --ro-bind /run /run"
 BWRAP_CMD+=" --dir /tmp"
 BWRAP_CMD+=" --proc /proc"
 BWRAP_CMD+=" --dev /dev"
@@ -29,13 +30,13 @@ BWRAP_CMD+=" --tmpfs /home/$USER"
 
 # Bind the opencode configuration (read-only)
 BWRAP_CMD+=" --ro-bind ~/.config/opencode /home/$USER/.config/opencode"
-BWRAP_CMD+=" --ro-bind ~/.opencode /home/$USER/.opencode"
+BWRAP_CMD+=" --bind ~/.opencode /home/$USER/.opencode"
+BWRAP_CMD+=" --bind ~/.local/share/opencode /home/$USER/.local/share/opencode"
+BWRAP_CMD+=" --bind ~/.local/state/opencode /home/$USER/.local/state/opencode"
+
 
 # Bind the current working directory
 BWRAP_CMD+=" --bind \"$PWD\" \"$PWD\""
-
-# Share permissions
-BWRAP_CMD+=" --share-net"
 
 # Bind extra paths from sandbox.conf
 if [[ -f "$CONFIG_FILE" ]]; then
@@ -52,3 +53,5 @@ fi
 
 # Execute the opencode binary
 eval "$BWRAP_CMD $Opencode_BIN \"\$@\""
+# Use below command for viewing whas bound to the sandbox
+#eval "$BWRAP_CMD bash"
