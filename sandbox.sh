@@ -9,6 +9,17 @@ if [[ -z "$Opencode_BIN" ]]; then
     exit 1
 fi
 
+# Handle optional parameters
+KUBE_BIND=false
+FILTERED_ARGS=()
+for arg in "$@"; do
+    if [[ "$arg" == "--kube" ]]; then
+        KUBE_BIND=true
+    else
+        FILTERED_ARGS+=("$arg")
+    fi
+done
+
 # Start bwrap command
 # We use --tmpfs for home to ensure a clean environment
 BWRAP_CMD="bwrap"
@@ -24,6 +35,11 @@ BWRAP_CMD+=" --ro-bind /run /run"
 BWRAP_CMD+=" --dir /tmp"
 BWRAP_CMD+=" --proc /proc"
 BWRAP_CMD+=" --dev /dev"
+
+# Bind kube config if requested and exists
+if [[ "$KUBE_BIND" == true && -d "$HOME/.kube" ]]; then
+    BWRAP_CMD+=" --ro-bind $HOME/.kube /home/$USER/.kube"
+fi
 
 # Setup a virtual home directory
 BWRAP_CMD+=" --tmpfs /home/$USER"
@@ -52,6 +68,6 @@ if [[ -f "$CONFIG_FILE" ]]; then
 fi
 
 # Execute the opencode binary
-eval "$BWRAP_CMD $Opencode_BIN \"\$@\""
+eval "$BWRAP_CMD $Opencode_BIN" "${FILTERED_ARGS[@]}"
 # Use below command for viewing whas bound to the sandbox
 #eval "$BWRAP_CMD bash"

@@ -15,13 +15,20 @@ Tool to run opencode in a sandboxed environment using `bwrap`.
 1. List any additional files or directories you want to grant access to in `sandbox.conf`.
 2. Run the sandbox script:
    ```bash
-   ./sandbox.sh [arguments]
-   ```
+./sandbox.sh [arguments]
+    ```
+
+## Arguments
+
+The `sandbox.sh` script supports the following optional arguments:
+
+- `--kube`: Binds the `~/.kube` directory into the sandbox as read-only, allowing `opencode` to access Kubernetes configurations.
 
 ## Setup as Default
+
 To make `opencode` always run sandboxed, add the following alias to your `.bashrc` or `.zshrc`:
 ```bash
-alias opencode='/home/jake/git/Sandboxed-OpenCode/sandbox.sh'
+alias opencode='/path/to/Sandboxed-OpenCode/sandbox.sh'
 ```
 Then restart your terminal or run `source ~/.bashrc`.
 
