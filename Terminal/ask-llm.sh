@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Configuration with defaults
-HOST="${LLM_HOST:-192.168.0.135}"
+HOST="${LLM_HOST:-https://llm.hughesportal.home}"
 ENDPOINT="${LLM_ENDPOINT:-/v1/chat/completions}"
-MODEL="${LLM_MODEL:-qwen/qwen3.5-9b}"
+MODEL="${LLM_MODEL:-cyankiwi/Qwen3.5-9B-AWQ-BF16-INT8}"
 
 # Determine OS
 OS=$(uname)
@@ -17,7 +17,7 @@ esac
 SYSTEM_PROMPT="You are a terminal assistant for $OS_NAME. If the user asks for a shell command, provide the specific shell command for $OS_NAME. Return ONLY the command, no prose, no backticks, unless an explanation is absolutely necessary for safety. Otherwise answer as you normally would."
 USER_QUERY="$*"
 
-curl -s "http://${HOST}:1234${ENDPOINT}" \
+curl -s "${HOST}${ENDPOINT}" \
   -H "Content-Type: application/json" \
   -d "$(jq -n \
     --arg model "$MODEL" \
